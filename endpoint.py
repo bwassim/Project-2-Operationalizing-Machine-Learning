@@ -3,9 +3,9 @@ import json
 
 # URL for the web service, should be similar to:
 # 'http://8530a665-66f3-49c8-a953-b82a2d312917.eastus.azurecontainer.io/score'
-scoring_uri = ''
+scoring_uri = 'http://bbb33f05-0a41-4661-80a6-9154d7249855.southcentralus.azurecontainer.io/score'
 # If the service is authenticated, set the key or token
-key = ''
+key = '9h0CCgKtYsVlBOQ3USjvkADAgxD8qLsV'
 
 # Two sets of data to score, so we get two results back
 data = {"data":
