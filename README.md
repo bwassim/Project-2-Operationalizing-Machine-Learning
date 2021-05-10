@@ -30,7 +30,7 @@ $ az ml workspace share -w Demo -g demo --user xxxxxxxx-cbdb-4cfd-089f-xxxxxxxxx
 ```
 ## Automated ML Experiment
 This part can be organised in the following sections 
-### Data
+### 1 - Data
 We try to load the training dataset `bankmarketing_train.csv` from the workspace. Otherwise we create it from the file.
 ```python
 found = False
@@ -52,3 +52,76 @@ if not found:
 ```
 
 <img src="./images/data-creation.png">
+
+### 2 - AutoML config 
+Create a general AutoML settings object
+
+```python 
+automl_settings = {
+    "experiment_timeout_minutes": 20,
+    "max_concurrent_iterations": 5,
+    "primary_metric" : 'AUC_weighted'
+}
+automl_config = AutoMLConfig(compute_target=compute_target,
+                             task = "classification",
+                             training_data=dataset,
+                             label_column_name="y",   
+                             path = project_folder,
+                             enable_early_stopping= True,
+                             featurization= 'auto',
+                             debug_log = "automl_errors.log",
+                             **automl_settings
+                            )
+```
+### 3 - Create a Pipeline and AutoML step
+```python
+from azureml.pipeline.core import PipelineData, TrainingOutput
+
+ds = ws.get_default_datastore()
+metrics_output_name = 'metrics_output'
+best_model_output_name = 'best_model_output'
+
+metrics_data = PipelineData(name='metrics_data',
+                           datastore=ds,
+                           pipeline_output_name=metrics_output_name,
+                           training_output=TrainingOutput(type='Metrics'))
+model_data = PipelineData(name='model_data',
+                           datastore=ds,
+                           pipeline_output_name=best_model_output_name,
+                           training_output=TrainingOutput(type='Model'))
+```
+Create AutoML step 
+
+```python
+automl_step = AutoMLStep(
+    name='automl_module',
+    automl_config=automl_config,
+    outputs=[metrics_data, model_data],
+    allow_reuse=True)
+```
+Create the Pipeline and Run it
+```python
+from azureml.pipeline.core import Pipeline
+pipeline = Pipeline(
+    description="pipeline_with_automlstep",
+    workspace=ws,    
+    steps=[automl_step])
+
+pipeline_run = experiment.submit(pipeline)
+```
+In this experiment, our goal is to solve a classification problem. As mentioned in the first project, we seek to classify whether a certain client will subcsribe to a term deposit. The output label given in the last column `y` holds all the decisions made by different clients.
+
+The figure below shows the results of our Run
+
+<img src="./images/run-autoML.png">
+
+One can notice that that VotingEnsemble is the algorithm that provides the best metric results. When clicking on the Votingensemble we observe the details given in the figure below
+
+<img src="./images/run-best-voting.png">
+
+### 4 - Pipeline Run Overview 
+Moving to the experiment section on Azure studio, one can find the detail of the pipeline we've just run. 
+<img src="./images/pipeline-run-overview.png">
+
+### 5 - Best model saved and tested
+We see that we have trained several model through AutoML and the best model was proposed to us.
