@@ -1,18 +1,54 @@
-*NOTE:* This file is a template that you can use to create the README for your project. The *TODO* comments below will highlight the information you should be sure to include.
+# Operationalizing Machine Learning
+## Overview
+This project is part of the Udacity Azure ML Nanodegree. In this project, we will continue to work with the [`Bank Marketing Dataset`](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing). We will use Azure to configure a cloud based machine learning production model, deploy it, and consume it. We will also create, publish and consume a pipeline. 
+The project main steps are depicted in the following diagram
+
+<img src="./images/diagram-project-2.png">
 
 
-# Your Project Title Here
+## Authentication
+This step consists in the creation of a Service Principal (SP) for accessing Azure workspace. Since the provided lab holds insufficient privileges for this step, it was not executed. However in general use case, we will follow these steps: 
 
-*TODO:* Write an overview to your project.
+* Ensure the az command-line tool is installed along with the ml extension
 
-## Architectural Diagram
-*TODO*: Provide an architectual diagram of the project and give an introduction of each step. An architectural diagram is an image that helps visualize the flow of operations from start to finish. In this case, it has to be related to the completed project, with its various stages that are critical to the overall flow. For example, one stage for managing models could be "using Automated ML to determine the best model". 
+The Azure Machine Learning extension allows us to interact with Azure Machine Learning Studio, part of the az command.
+* Ensure it is installed with the following command:
+```
+   az extension add -n azure-cli-ml
+```
+Create the Service Principal with az after login in
+```
+az ad sp create-for-rbac --sdk-auth --name ml-auth
+```
+Capture the "objectId" using the clientID:
+```
+az ad sp show --id xxxxxxxx-3af0-4065-8e14-xxxxxxxxxxxx
+```
+Assign the role to the new Service Principal for the given Workspace, Resource Group and User objectId
+```
+$ az ml workspace share -w Demo -g demo --user xxxxxxxx-cbdb-4cfd-089f-xxxxxxxxxxxx --role owner
+```
+## Automated ML Experiment
+This part can be organised in the following sections 
+### Data
+We try to load the training dataset `bankmarketing_train.csv` from the workspace. Otherwise we create it from the file.
+```python
+found = False
+key = "BankMarketing Dataset"
+description_text = "Bank Marketing DataSet for Udacity Course 2"
 
-## Key Steps
-*TODO*: Write a short discription of the key steps. Remeber to include all the screenshots required to demonstrate key steps. 
+if key in ws.datasets.keys(): 
+        found = True
+        dataset = ws.datasets[key] 
 
-## Screen Recording
-*TODO* Provide a link to a screen recording of the project in action. Remember that the screencast should demonstrate:
+if not found:
+        # Create AML Dataset and register it into Workspace
+        example_data = 'https://automlsamplenotebookdata.blob.core.windows.net/automl-sample-notebook-data/bankmarketing_train.csv'
+        dataset = Dataset.Tabular.from_delimited_files(example_data)        
+        #Register Dataset in Workspace
+        dataset = dataset.register(workspace=ws,
+                                   name=key,
+                                   description=description_text)
+```
 
-## Standout Suggestions
-*TODO (Optional):* This is where you can provide information about any standout suggestions that you have attempted.
+<img src="./images/data-creation.png">
