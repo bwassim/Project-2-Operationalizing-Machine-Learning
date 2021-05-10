@@ -124,4 +124,10 @@ Moving to the experiment section on Azure studio, one can find the detail of the
 <img src="./images/pipeline-run-overview.png">
 
 ### 5 - Best model saved and tested
-We see that we have trained several model through AutoML and the best model was proposed to us.
+We see that we have trained several model through AutoML and the best model is saved and is ready to be deployed. 
+
+## Model Deployment 
+Deploying the Model will allow to interact with HTTP API service and the model by sending data over POST requests.
+Notice in the figure below
+
+<img src="./images/model-deployment.png">
