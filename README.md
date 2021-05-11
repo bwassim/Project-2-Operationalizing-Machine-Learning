@@ -172,7 +172,7 @@ The `benchmark.sh` script inlcudes mainly the apache benchmark command `ab` that
 ```
 ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer 9h0CCgKtYsVlBOQ3USjvkADAgxD8qLsV' http://bbb33f05-0a41-4661-80a6-9154d7249855.southcentralus.azurecontainer.io/score
 ```
-<img src="./images/benchmark-1.png" >
+<img src="./images/benchmark.png" >
 <img src="./images/benchmark-2.png" >
 
 ## Create, Publish and Consume a Pipeline
