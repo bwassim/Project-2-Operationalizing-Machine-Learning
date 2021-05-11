@@ -158,3 +158,21 @@ Azure provides a `Swagger JSON file` for deployed models. The swagger URI is use
 <img src="./images/swagger-2.png">
 
 ## Consume Model Endpoint
+* Once the model is deployed, we need to use the `endpoint.py` script to interact with the trained model. 
+* We also need to modify the `scoring_uri` and `key` to match the key and the REST endpoint URI that was generated after deployment.
+
+
+<img src="./images/endpointpy.png">
+<img src="./images/testendpointpy.png">
+
+## Benchmark
+It's interesting to create a baseline for to have an idea on the request's response time. Basically we are interested to know how many requests per second the endpoint is capable of serving or similarly the average response time.
+The `benchmark.sh` script inlcudes mainly the apache benchmark command `ab` that runs against the selected endpoint using `data.json` file created by the `endpoint.py` we used previously. 
+
+```
+ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer 9h0CCgKtYsVlBOQ3USjvkADAgxD8qLsV' http://bbb33f05-0a41-4661-80a6-9154d7249855.southcentralus.azurecontainer.io/score
+```
+<img src="./images/benchmark-1.png" >
+<img src="./images/benchmark-2.png" >
+
+## Create, Publish and Consume a Pipeline
