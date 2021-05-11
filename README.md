@@ -139,4 +139,6 @@ service.update(enable_app_insights=True)
 ```
 
 <img src="./images/rest-endpoint-model-app-insight.png">
-Running the `log.py` on the terminal will enable Application Insights together with logging information. The application insights url.
+
+Running the `log.py` on the terminal will enable Application Insights together with logging information. One can observe the application insights url on the left handside of the above figure. 
+> It's important to note that in order for the log.py script to run correctly, it is important to download the `config.json` file from Azure studio and put it in the same folder as the log script. 
