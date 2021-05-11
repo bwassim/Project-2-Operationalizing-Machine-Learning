@@ -128,6 +128,15 @@ We see that we have trained several model through AutoML and the best model is s
 
 ## Model Deployment 
 Deploying the Model will allow to interact with HTTP API service and the model by sending data over POST requests.
-Notice in the figure below
+Notice in the figure that clicking on the deploy button will open up the window on the right handside. We enable authentication and make sure to deploy the model using Azure COntained Instance (ACI)
 
 <img src="./images/model-deployment.png">
+
+## Enabling Application Insights
+There are two ways of enabling Application Insights. On can click on `Advanced` at the botttom of the right handside of the above figure and enable Application Insights before deploying the model. It can also be done using our log.py file with the following command line 
+```python 
+service.update(enable_app_insights=True)
+```
+
+<img src="./images/rest-endpoint-model-app-insight.png">
+Running the `log.py` on the terminal will enable Application Insights together with logging information. The application insights url.
