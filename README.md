@@ -141,4 +141,20 @@ service.update(enable_app_insights=True)
 <img src="./images/rest-endpoint-model-app-insight.png">
 
 Running the `log.py` on the terminal will enable Application Insights together with logging information. One can observe the application insights url on the left handside of the above figure. 
-> It's important to note that in order for the log.py script to run correctly, it is important to download the `config.json` file from Azure studio and put it in the same folder as the log script. 
+> It's important to note that in order for the log.py script to run correctly, it is important to download the `config.json` file from Azure studio and put it in the same folder. 
+
+## Swagger Documentation
+Swagger is a tool that helps build, document, and consume RESTful web services like the ones we are deploying in Azure ML Studio. It further explains what types of `HTTP requests` that an API can consume, like `POST` and `GET`. 
+
+* Ensure Docker is installed on our computer.
+
+Azure provides a `Swagger JSON file` for deployed models. The swagger URI is used to download the JSON file. 
+
+1. `Swagger.sh` will download the latest Swagger container, and it will run it on port 80. In our case since no premisson was granted for port 80, we updated the script to a port with higher value : 9000.
+2. `serve.py` will start a Python server on port 9000. The file needs to be in the same directory as our `swagger.json`
+
+<img src="./images/best-model-swagger.png">
+<img src="./images/swagger-1.png">
+<img src="./images/swagger-2.png">
+
+## Consume Model Endpoint
