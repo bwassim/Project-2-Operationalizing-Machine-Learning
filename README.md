@@ -150,7 +150,7 @@ Swagger is a tool that helps build, document, and consume RESTful web services l
 
 Azure provides a `Swagger JSON file` for deployed models. The swagger URI is used to download the JSON file. 
 
-1. `Swagger.sh` will download the latest Swagger container, and it will run it on port 80. In our case since no premisson was granted for port 80, we updated the script to a port with higher value : 9000.
+1. `Swagger.sh` will download the latest Swagger container, and it will run it on port 80. In our case since no premisson was granted for port 80, I updated the script to a port with higher value : 9000.
 2. `serve.py` will start a Python server on port 9000. The file needs to be in the same directory as our `swagger.json`
 
 <img src="./images/best-model-swagger.png">
@@ -166,7 +166,7 @@ Azure provides a `Swagger JSON file` for deployed models. The swagger URI is use
 <img src="./images/testendpointpy.png">
 
 ## Benchmark
-It's interesting to create a baseline for to have an idea on the request's response time. Basically we are interested to know how many requests per second the endpoint is capable of serving or similarly the average response time.
+It's interesting to create a baseline to have an idea on the request's response time. Basically we are interested to know how many requests per second the endpoint is capable of serving or similarly the average response time.
 The `benchmark.sh` script inlcudes mainly the apache benchmark command `ab` that runs against the selected endpoint using `data.json` file created by the `endpoint.py` we used previously. 
 
 ```
@@ -176,3 +176,16 @@ ab -n 10 -v 4 -p data.json -T 'application/json' -H 'Authorization: Bearer 9h0CC
 <img src="./images/benchmark-2.png" >
 
 ## Create, Publish and Consume a Pipeline
+The main goal of publishing a pipeline is to automate the AutoML training process, that is the AutoMl pipeline we create can be run on demand or at anytime or schedule. By resulting REST endpoint can then be used to trigger the pipeline in the Azure cloud plateform or remotely using HTTP library. To publish a pipeline we do the following
+
+```python 
+published_pipeline = pipeline_run.publish_pipeline(
+    name="Bankmarketing Train", description="Training bankmarketing pipeline", version="1.0")
+```
+Authenticate once again, to retrieve the auth_header so that the endpoint can be used
+```python 
+from azureml.core.authentication import InteractiveLoginAuthentication
+
+interactive_auth = InteractiveLoginAuthentication()
+auth_header = interactive_auth.get_authentication_header()
+```
